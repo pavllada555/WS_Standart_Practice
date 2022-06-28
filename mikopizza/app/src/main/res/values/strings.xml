@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">mikopizza</string>
+    <string name="email_hint">E-mail</string>
+    <string name="password_hint">Password</string>
+    <string name="remember_check_title">Remember me</string>
+    <string name="sign_in_forget">Forgot password?</string>
+    <string name="action_login">Login</string>
+    <string name="full_name_hint">Full name</string>
+    <string name="phone_number_hint">Phone number</string>
+    <string name="action_register">Register now</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="sign_in_title">Sign in</string>
+    <string name="sign_up_title">Sign up</string>
+    <string name="forgot_title">Forgot?</string>
+    <string name="sign_in_subtitle">Don\'t have an account?</string>
+    <string name="sign_up_subtitle">Already has account?</string>
+    <string name="forgot_subtitle">We are so sorry</string>
+    <string name="sign_in_action">Sign up!</string>
+    <string name="sign_up_action">Sign In!</string>
+</resources>
