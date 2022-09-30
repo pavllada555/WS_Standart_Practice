@@ -19,6 +19,7 @@ object Tokens: Table() {
             }
         }
     }
+
     fun fetchTokens(): List<TokenDTO> {
         return try {
             transaction {

@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.mikopizza.R
 import com.example.mikopizza.navigation.NavigationTree
+import com.example.mikopizza.network.ApiService
 import com.example.mikopizza.ui.screens.login.models.LoginAction
 import com.example.mikopizza.ui.screens.login.models.LoginEvent
 import com.example.mikopizza.ui.screens.login.models.LoginSubState
@@ -31,6 +33,11 @@ import com.example.mikopizza.ui.screens.login.views.ForgotView
 import com.example.mikopizza.ui.screens.login.views.SignInView
 import com.example.mikopizza.ui.screens.login.views.SignUpView
 import com.example.mikopizza.ui.theme.AppTheme
+import com.example.mikopizza.ui.theme.MyFont
+
+private val apiService by lazy {
+    ApiService.create()
+}
 
 @Composable
 fun LoginScreen(
@@ -49,19 +56,19 @@ fun LoginScreen(
                 Image(
                     bitmap = ImageBitmap.imageResource(R.drawable.logo),
                     "",
-                    alignment = Alignment.CenterStart,
                     modifier = Modifier
-                        .heightIn(min = 100.dp, max = 200.dp)
-                        .padding(top = 20.dp, start = 80.dp)
-                        .widthIn(min = 100.dp, max = 200.dp)
+                        .heightIn(min = 200.dp, max = 250.dp)
+                        .padding(top = 20.dp)
+                        .widthIn(min = 100.dp, max = 400.dp)
                         .fillMaxSize()
                 )
                 Text(
-                    text = "Miko Pizza", style = TextStyle(
-                        AppTheme.colors.systemTextColor,
+                    text = "Miko pizza!", style = TextStyle(
+                        AppTheme.colors.authorizationTextColor,
                         fontSize = 40.sp
                     ), textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(start = 80.dp)
+                    fontFamily = MyFont,
+                    modifier = Modifier.padding(start = 65.dp)
                 )
             }
             item {
@@ -70,24 +77,26 @@ fun LoginScreen(
                         LoginSubState.SignIn -> stringResource(id = R.string.sign_in_title)
                         LoginSubState.SignUp -> stringResource(id = R.string.sign_up_title)
                         LoginSubState.Forgot -> stringResource(id = R.string.forgot_title)
-                    }, style = TextStyle(
-                        color = AppTheme.colors.systemTextColor,
+                    },
+                    fontFamily = MyFont,
+                    style = TextStyle(
+                        color = AppTheme.colors.authorizationTextColor,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 25.sp
                     )
                 )
             }
-            item{
-                Row(modifier = Modifier.padding(top = 0.dp)){
+            item {
+                Row(modifier = Modifier.padding(top = 0.dp)) {
                     Text(
                         text = when (loginSubState) {
                             LoginSubState.SignIn -> stringResource(id = R.string.sign_in_subtitle)
                             LoginSubState.SignUp -> stringResource(id = R.string.sign_up_subtitle)
                             LoginSubState.Forgot -> stringResource(id = R.string.forgot_subtitle)
                         },
+                        fontFamily = MyFont,
                         style = TextStyle(
-                            color = AppTheme.colors.systemTextColor,
-                          // fontStyle = FontStyle.Italic
+                            color = AppTheme.colors.authorizationTextColor,
                         )
                     )
                     Spacer(modifier = Modifier.width(4.dp))
@@ -97,13 +106,14 @@ fun LoginScreen(
                                 loginViewModel.obtainEvent(LoginEvent.ActionClicked)
                             },
                             text = when (loginSubState) {
-                                LoginSubState.SignIn -> stringResource(id = R.string.sign_in_action)
-                                LoginSubState.SignUp -> stringResource(id = R.string.sign_up_action)
+                                LoginSubState.SignIn -> stringResource(id = R.string.sign_up_action)
+                                LoginSubState.SignUp -> stringResource(id = R.string.sign_in_action)
                                 else -> ""
                             },
+                            fontFamily = MyFont,
                             style = TextStyle(
                                 color = AppTheme.colors.activeTextColor,
-                                //fontStyle = FontStyle.Italic
+                                fontStyle = FontStyle.Italic
                             )
                         )
                     }
@@ -111,8 +121,8 @@ fun LoginScreen(
 
                 }
             }
-            item{
-                when(loginSubState){
+            item {
+                when (loginSubState) {
                     LoginSubState.SignIn -> SignInView(
                         viewState = this@with,
                         onLoginFieldChange = {
@@ -139,17 +149,14 @@ fun LoginScreen(
                         onPasswordFieldChange = {
                             loginViewModel.obtainEvent(LoginEvent.PasswordChanged(it))
                         },
-                        onFullNameFieldChange =  {
+                        onFullNameFieldChange = {
                             loginViewModel.obtainEvent(LoginEvent.FullNameChanged(it))
                         },
-                        onPhoneNumberFieldChange =  {
+                        onPhoneNumberFieldChange = {
                             loginViewModel.obtainEvent(LoginEvent.PhoneNumberChanged(it))
                         },
                         onRegisterClick = {
-                            loginViewModel.obtainEvent(LoginEvent.LoginClicked)
-                        },
-                        onCancelClicked = {
-                            loginViewModel.obtainEvent(LoginEvent.LoginClicked)
+                            loginViewModel.obtainEvent(LoginEvent.RegisterClicked)
                         },
                     )
                     LoginSubState.Forgot -> ForgotView()
@@ -157,19 +164,20 @@ fun LoginScreen(
             }
         }
     }
-    LaunchedEffect(key1 = viewState.value.loginAction){
-        when (val action = viewState.value.loginAction){
+    LaunchedEffect(key1 = viewState.value.loginAction) {
+        when (val action = viewState.value.loginAction) {
             is LoginAction.OpenDashBoard -> {
-                navController.navigate("${NavigationTree.Main.name}/${action.username}"){
-                    popUpTo(NavigationTree.Login.name)
+                navController.navigate("${NavigationTree.Main.name}/${action.username}") {
+                    popUpTo(0)
                 }
             }
+            else -> Unit
         }
     }
-    DisposableEffect(key1 = Unit, effect ={
+    DisposableEffect(key1 = Unit, effect = {
         onDispose {
-            loginViewModel.obtainEvent(LoginEvent.LoginClicked)
+            loginViewModel.obtainEvent(LoginEvent.LoginActionInvoked)
         }
-    } )
+    })
 
 }

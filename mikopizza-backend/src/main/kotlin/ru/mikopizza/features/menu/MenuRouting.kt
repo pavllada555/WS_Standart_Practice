@@ -12,14 +12,12 @@ fun Application.configureMenuRouting() {
 
     routing {
         post("/menu/search") {
-                val menuController = MenuController(call)
-                menuController.performSearch()
+            MenuController(call).performSearch()
 
         }
 
-        post("/menu/create"){
-            val menuController = MenuController(call)
-            menuController.createMenu()
+        post("/menu/create") {
+            MenuController(call).createMenu()
         }
     }
 }

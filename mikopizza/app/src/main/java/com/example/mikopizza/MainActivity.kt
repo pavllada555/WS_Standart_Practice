@@ -12,21 +12,25 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             MikopizzaTheme {
+
                 val systemUiController = rememberSystemUiController()
                 val primaryBackground = AppTheme.colors.firstBackgroundColor
+
                 SideEffect {
                     systemUiController.setSystemBarsColor(
                         color = primaryBackground,
                         darkIcons = true
                     )
                 }
+
                 ApplicationScreen()
             }
         }
     }
 }
-

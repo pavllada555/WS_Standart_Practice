@@ -1,16 +1,16 @@
 package com.example.mikopizza.ui.screens.login.models
 
-enum class LoginSubState{
+enum class LoginSubState {
     SignIn, SignUp, Forgot
 
 }
 
-sealed class LoginAction{
-    data class OpenDashBoard(val username: String): LoginAction()
-    object None: LoginAction()
+sealed class LoginAction {
+    data class OpenDashBoard(val username: String) : LoginAction()
+    object None : LoginAction()
 }
 
-data class LoginViewState (
+data class LoginViewState(
     val loginSubState: LoginSubState = LoginSubState.SignIn,
     val emailValue: String = "",
     val passwordValue: String = "",
